@@ -8,7 +8,7 @@ def do_pack():
     """ returns generated archive else None """
     local('mkdir -p versions')
     arch_path = f'versions/web_static_{time.strftime("%Y%m%d%H%M%S")}.tgz'
-    res = local(f'tar -cvzf {arch_path} web_static'):
+    res = local(f'tar -cvzf {arch_path} web_static')
     if res:
         return arch_path
     return None
