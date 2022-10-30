@@ -16,7 +16,7 @@ def do_deploy(archive_path):
 
     archive_name = archive_path[9:]
 
-    remote_dir = '/data/web_static/releases/{}' + archive_name[:-4]
+    remote_dir = '/data/web_static/releases/' + archive_name[:-4]
 
     put(archive_path, '/tmp')
 
