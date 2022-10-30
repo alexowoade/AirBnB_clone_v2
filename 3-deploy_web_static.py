@@ -13,9 +13,9 @@ def do_pack():
     """ return the archive path if correctly gernerated. """
     local("mkdir -p versions")
     date = datetime.now().strftime("%Y%m%d%H%M%S")
-    archive_path = "versions/web_static_{}.tgz".format(date)
-    if local("tar -cvzf {} web_static".format(archive_path)):
-        return archive_path
+    archived_path = "versions/web_static_{}.tgz".format(date)
+    if local("tar -cvzf {} web_static".format(archived_path)):
+        return archived_path
     return None
 
 
