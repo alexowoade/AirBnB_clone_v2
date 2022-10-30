@@ -5,7 +5,7 @@ import time
 
 
 def do_pack():
-    """ returns generated archive else None """
+    """ returns generated archive else None  """
     local('mkdir -p versions')
     arch_path = f'versions/web_static_{time.strftime("%Y%m%d%H%M%S")}.tgz'
     if local(f'tar -cvzf {arch_path} web_static'):
