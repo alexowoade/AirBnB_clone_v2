@@ -20,22 +20,27 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-    """ returns True if all operations are successful
-        or False if file path doesn't exist
     """
-    if not path.exists(archive_path):
+    a Fabric script that distributes an archive to your web servers
+    """
+
+    if not os.path.exists(archive_path):
         return False
-    archive_name = archive_path[9:]
-    remote_dir = '/data/web_static/releases/' + archive_name[:-4]
-    put(archive_path, '/tmp')
-    run('sudo mkdir -p {}'.format(remote_dir))
-    with cd(remote_dir):
-        run('sudo tar -xzf {}'.format('/tmp/' + archive_name))
-    run('sudo rm /tmp/{}'.format(archive_name))
-    run('sudo mv {}/web_static/* {}'.format(remote_dir, remote_dir))
-    run('sudo rm -rf {}/web_static'.format(remote_dir))
-    run('sudo unlink /data/web_static/current')
-    run('sudo ln -s {} /data/web_static/current'.format(remote_dir))
+
+    archived_file = archive_path[9:]
+    newest_version = "/data/web_static/releases/" + archive_path[:-4]
+    archived_file = "/tmp/" + archived_file
+
+    put(archive_path, "/tmp/")
+    run("sudo mkdir -p {}".format(newest_version))
+    run("sudo tar -xzf {} -C {}/".format(archived_file, newest_version))
+    run("sudo rm {}".format(archived_file))
+    run("sudo mv {}/web_static/* {}".format(newest_version,
+                                            newest_version))
+    run("sudo rm -rf {}/web_static".format(newest_version))
+    run("sudo rm -rf /data/web_static/current")
+    run("sudo ln -s {} /data/web_static/current".format(newest_version))
+
     print("New version deployed!")
     return True
 
