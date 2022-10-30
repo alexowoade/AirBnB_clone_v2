@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ uses the do_pack and do_deploy functions for full deployment """
 from fabric.api import *
-from datetime import datetime
+import time
 from os import path
 
 
@@ -12,13 +12,10 @@ env.user = 'ubuntu'
 def do_pack():
     """ return the archive path if correctly gernerated. """
     local("mkdir -p versions")
-    date = datetime.now().strftime("%Y%m%d%H%M%S")
-    archived_f_path = "versions/web_static_{}.tgz".format(date)
-    t_gzip_archive = local("tar -cvzf {} web_static".format(archived_f_path))
-
-    if t_gzip_archive.succeeded:
-        return archived_f_path
-    return None
+    date_time = time.strftime("%Y%m%d%H%M%S")
+    archive_path = "versions/web_static_{}.tgz".format(date_time)
+    new_archive = local("tar -cvzf {} web_static".format(archive_path))
+    return archive_path if new_archive.succeeded else None
 
 
 def do_deploy(archive_path):
