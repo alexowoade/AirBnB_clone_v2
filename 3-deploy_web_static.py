@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ uses the do_pack and do_deploy functions for full deployment """
+import do_pack, do_deploy
 
 
 def deploy():
