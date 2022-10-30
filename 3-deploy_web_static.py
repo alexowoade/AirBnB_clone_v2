@@ -5,7 +5,6 @@ from os import path
 from fabric.api import local, put, run, cd, env
 
 env.hosts = ['34.204.186.164', '54.80.223.108']
-env.user = 'ubuntu'
 
 
 def do_pack():
