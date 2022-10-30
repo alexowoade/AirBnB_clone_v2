@@ -11,7 +11,7 @@ def do_pack():
     """
 
     local('mkdir -p versions')
-    arch_path = f'versions/web_static_{time.strftime("%Y%m%d%H%M%S")}.tgz'
-    if local("tar -cvzf {} web_static".format(arch_path)):
-        return arch_path
+    archived_f_path = f'versions/web_static_{time.strftime("%Y%m%d%H%M%S")}.tgz'
+    if local("tar -cvzf {} web_static".format(archived_f_path)):
+        return archived_f_path
     return None
