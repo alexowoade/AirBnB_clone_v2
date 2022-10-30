@@ -12,6 +12,6 @@ def do_pack():
 
     local('mkdir -p versions')
     arch_path = f'versions/web_static_{time.strftime("%Y%m%d%H%M%S")}.tgz'
-    if local(f"tar -cvzf {arch_path} web_static"):
+    if local("tar -cvzf {} web_static".format(arch_path)):
         return arch_path
     return None
