@@ -3,10 +3,9 @@
 from os import path
 from fabric.api import put, run, cd, env
 
-env.hosts = ['34.204.186.164']
+env.hosts = ['34.204.186.164', '54.80.223.108']
 env.user = 'ubuntu'
 
-# web_static_20221030133540.tgz
 def do_deploy(archive_path):
     """ returns True if all operations are successful
         or False if file path doesn't exist
