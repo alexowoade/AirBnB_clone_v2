@@ -2,7 +2,7 @@
 """ uses the do_pack and do_deploy functions for full deployment """
 from fabric.api import *
 import time
-from os import path
+import os
 
 
 env.hosts = ['34.204.186.164', '54.80.223.108']
