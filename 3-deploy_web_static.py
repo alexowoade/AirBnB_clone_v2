@@ -16,10 +16,9 @@ def do_pack():
     archived_f_path = "versions/web_static_{}.tgz".format(date)
     t_gzip_archive = local("tar -cvzf {} web_static".format(archived_f_path))
 
-    if t_gzip_archive.succeeded:
+    if t_gzip_archive:
         return archived_f_path
-    else:
-        return None
+    return None
 
 
 def do_deploy(archive_path):
