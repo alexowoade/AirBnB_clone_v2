@@ -6,6 +6,7 @@ from fabric.api import put, run, cd, env
 env.hosts = ['34.204.186.164', '54.80.223.108']
 env.user = 'ubuntu'
 
+
 def do_deploy(archive_path):
     """ returns True if all operations are successful
         or False if file path doesn't exist
@@ -25,6 +26,10 @@ def do_deploy(archive_path):
         run('sudo tar -xzf {}'.format('/tmp/' + archive_name))
 
     run('sudo rm /tmp/{}'.format(archive_name))
+
+    run('sudo mv {}/web_static/* {}'.format(remote_dir, remote_dir))
+
+    run('sudo rm -rf {}/web_static'.format(remote_dir))
 
     run('sudo rm /data/web_static/current')
 
