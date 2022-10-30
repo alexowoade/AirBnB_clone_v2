@@ -10,13 +10,19 @@ env.user = 'ubuntu'
 
 
 def do_pack():
-    """ return the archive path if correctly gernerated. """
+    """
+        return the archive path if correctly gernerated.
+    """
+
     local("mkdir -p versions")
     date = datetime.now().strftime("%Y%m%d%H%M%S")
-    archived_path = "versions/web_static_{}.tgz".format(date)
-    if local("tar -cvzf {} web_static".format(archived_path)):
-        return archived_path
-    return None
+    archived_f_path = "versions/web_static_{}.tgz".format(date)
+    t_gzip_archive = local("tar -cvzf {} web_static".format(archived_f_path))
+
+    if t_gzip_archive.succeeded:
+        return archived_f_path
+    else:
+        return None
 
 
 def do_deploy(archive_path):
