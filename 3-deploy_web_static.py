@@ -10,8 +10,8 @@ env.user = 'ubuntu'
 
 
 def do_pack():
-    """return the archive path if correctly gernerated."""
-    local('mkdir -p versions')
+    """ return the archive path if correctly gernerated. """
+    local("mkdir -p versions")
     date = datetime.now().strftime("%Y%m%d%H%M%S")
     archive_path = "versions/web_static_{}.tgz".format(date)
     if local("tar -cvzf {} web_static".format(archive_path)):
