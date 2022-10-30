@@ -5,6 +5,4 @@
 def deploy():
     """ full deployment """
     archive_path = do_pack()
-    if not archive_path:
-        return False
-    return do_deploy(archive_path)
+    return do_deploy(archive_path) if archive_path else False
