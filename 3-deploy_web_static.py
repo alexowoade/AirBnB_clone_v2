@@ -16,11 +16,11 @@ def do_pack():
 
     local("mkdir -p versions")
     date = datetime.now().strftime("%Y%m%d%H%M%S")
-    archive_path = "versions/web_static_{}.tgz".format(date)
-    path_created = local("tar -cvzf {} web_static".format(archive_path))
+    generated_archive = "versions/web_static_{}.tgz".format(date)
+    path_created = local("tar -cvzf {} web_static".format(generated_archive))
 
     if path_created:
-        return archive_path
+        return generated_archive
     return None
 
 
