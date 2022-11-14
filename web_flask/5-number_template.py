@@ -6,45 +6,41 @@ app = Flask(__name__)
 
 @app.route('/', strict_slashes=False)
 def hello_hbnb():
-    """ displays 'Hello HBNB!' """
+    """ Prints a Message when / is called """
     return 'Hello HBNB!'
 
 
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    """ displays 'HBNB' """
+    """ Prints a Message when /hbnb is called """
     return 'HBNB'
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def c_text(text):
-    """ displays 'C' followed  by the value of the text variable
-        (replace underscore _ symbols with a space )
-    """
-    return 'C ' + text.replace('_', ' ')
+def c_is_fun(text):
+    """ Prints a Message when /c is called """
+    return "C " + text.replace('_', ' ')
 
 
 @app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def python_text(text='is cool'):
-    """ displays 'Python' followed  by the value of the text variable
-        (replace underscore _ symbols with a space )
-    """
-    return 'Python ' + text.replace('_', ' ')
+def python_is_cool(text='is_cool'):
+    """ Prints a Message when /python is called """
+    return "Python " + text.replace('_', ' ')
 
 
 @app.route('/number/<int:n>', strict_slashes=False)
-def number_n(n):
-    """ display 'n is a number' only if n is an integer """
-    return '{} is a number'.format(n)
+def n_is_number(n):
+    """ Prints a Message when /number is called only if n is an int"""
+    return "{:d} is a number".format(n)
 
 
 @app.route('/number_template/<int:n>', strict_slashes=False)
-def number_template_n(n):
+def number_template(n):
     """ display a HTML page only if n is an integer """
     return render_template('5-number.html', value=n)
 
 
 if __name__ == "__main__":
-    """ run flask web app """
+    """ Main Function """
     app.run(host='0.0.0.0', port=5000)

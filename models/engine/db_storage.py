@@ -1,77 +1,79 @@
 #!/usr/bin/python3
-"""db storage module"""
+# This is the file storage class for AirBnB
 
-from os import getenv
-
+import os
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.scoping import scoped_session
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-
-from models.base_model import Base
-from models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.review import Review
+from models import *
 
 
 class DBStorage:
-    """ creates a db storage engine"""
     __engine = None
     __session = None
-    classes = ["State", "City", "User", "Place", "Review"]
+    valid_classes = ["User", "State", "City", "Amenity", "Place", "Review"]
 
     def __init__(self):
-        """ create engine"""
-        user = getenv("HBNB_MYSQL_USER")
-        pwd = getenv("HBNB_MYSQL_PWD")
-        host = getenv("HBNB_MYSQL_HOST")
-        db = getenv("HBNB_MYSQL_DB")
-        env = getenv("HBNB_ENV")
+        self.__engine = create_engine("mysql+mysqldb://" +
+                                      os.environ['HBNB_MYSQL_USER'] +
+                                      ":" + os.environ['HBNB_MYSQL_PWD'] +
+                                      "@" + os.environ['HBNB_MYSQL_HOST'] +
+                                      ":3306/" +
+                                      os.environ['HBNB_MYSQL_DB'])
 
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-                                      .format(user, pwd, host, db),
-                                      pool_pre_ping=True)
-
-        if env == "test":
-            Base.metadata.drop_all(bind=self.__engine)
+        try:
+            if os.environ['HBNB_MYSQL_ENV'] == "test":
+                Base.metadata.drop_all(self.__engine)
+        except KeyError:
+            pass
 
     def all(self, cls=None):
-        obj_dict = {}
-
-        if cls:
-            if isinstance(cls, str):
-                cls = eval(cls)
-
-            if cls.__name__ in DBStorage.classes:
-                query = self.__session.query(cls).all()
-
-                for obj in query:
-                    key = f"{type(obj).__name__}.{obj.id}"
-                    obj_dict.update({key: obj})
+        storage = {}
+        if cls is None:
+            for cls_name in self.valid_classes:
+                for instance in self.__session.query(eval(cls_name)):
+                    storage[instance.id] = instance
         else:
-            for cls_ in DBStorage.classes:
-                query = self.__session.query(eval(cls_)).all()
+            if cls not in self.valid_classes:
+                return
+            for instance in self.__session.query(eval(cls)):
+                storage[instance.id] = instance
 
-                for obj in query:
-                    key = f"{type(obj).__name__}.{obj.id}"
-                    obj_dict.update({key: obj})
-
-        return obj_dict
+        return storage
 
     def new(self, obj):
-        if type(obj).__name__ in DBStorage.classes:
-            self.__session.add(obj)
+        self.__session.add(obj)
 
     def save(self):
-        self.__session.commit()
+        try:
+            self.__session.commit()
+        except:
+            self.__session.rollback()
+            raise
+        finally:
+            self.__session.close()
 
-    def delete(self, obj=None):
-        if obj and type(obj).__name__ in DBStorage.classes:
-            self.__session.delete(obj)
+    def update(self, cls, obj_id, key, new_value):
+        res = self.__session.query(eval(cls)).filter(eval(cls).id == obj_id)
+
+        if res.count() == 0:
+            return 0
+
+        res.update({key: (new_value)})
+        return 1
 
     def reload(self):
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine)
-        Session = scoped_session(session_factory)
-        self.__session = Session()
+        self.__session = scoped_session(sessionmaker(bind=self.__engine))
+
+    def delete(self, obj=None):
+        if obj is None:
+            return
+
+        self.__session.delete(obj)
+
+    def close(self):
+        self.__session.reload()
+        
+    def close(self):
+        self.__session.remove()
