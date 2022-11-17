@@ -1,39 +1,66 @@
 #!/usr/bin/python3
-""" A script that starts a flask web application"""
+"""
+A script that starts a Flask web application:
+"""
+
 from flask import Flask
+
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
-def hello_hbnb():
-    """ Prints a Message when / is called """
-    return 'Hello HBNB!'
+def hello_route():
+    """
+    Displays 'Hello HBNB!'
+    Returns:
+        str: "Hello HBNB"
+    """
+    return "Hello HBNB!"
 
 
 @app.route('/hbnb', strict_slashes=False)
-def hbnb():
-    """ Prints a Message when /hbnb is called """
-    return 'HBNB'
+def hbnb_route():
+    """
+    Displays 'HBNB'
+    Returns:
+        str: "HBNB"
+    """
+    return "HBNB"
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def c_is_fun(text):
-    """ Prints a Message when /c is called """
-    return "C " + text.replace('_', ' ')
+def c_route(text):
+    """
+    display “C ” followed by the value of the text variable
+        (replace underscore '_' symbols with a space ' ')
+    Returns:
+        str: "C <text>"
+    """
+    return "C {}".format(text.replace('_', ' '))
 
 
 @app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def python_is_cool(text='is_cool'):
-    """ Prints a Message when /python is called """
-    return "Python " + text.replace('_', ' ')
+def python_route(text="is_cool"):
+    """
+    display “Python ”, followed by the value of the text variable
+        (replace underscore _ symbols with a space )
+        - The default value of text is “is cool”
+    Returns:
+        str: "Python <text>"
+    """
+    return "Python {}".format(text.replace('_', ' '))
 
 
 @app.route('/number/<int:n>', strict_slashes=False)
-def n_is_number(n):
-    """ Prints a Message when /number is called only if n is an integer"""
-    return "{:d} is a number".format(n)
+def number_route(n):
+    """
+    display “n is a number” only if n is an integer
+    Returns:
+        int: the value of n
+    """
+    return "{} is a number".format(n)
+
 
 if __name__ == "__main__":
-    """ Main Function """
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=5000)
