@@ -1,18 +1,16 @@
 #!/usr/bin/python3
-"""Starts Flask web app
-Listening on 0.0.0.0:5000
-Route '/' displays "Hello HBNB!"
-"""
+""" A script that starts a flask web application """
 from flask import Flask
 
 app = Flask(__name__)
 
 
-@app.route('/', strict_slashes=False)
-def hello_route():
-    """Displays 'Hello HBNB!'"""
+@app.route("/", strict_slashes=False)
+def index():
+    """ Function called with / route """
     return "Hello HBNB!"
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    """ Main Function """
+    app.run(host='0.0.0.0', port=5000)

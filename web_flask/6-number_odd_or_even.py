@@ -1,63 +1,54 @@
 #!/usr/bin/python3
-"""Starts Flask web app
-Routes:
-    / - display "Hello HBNB!"
-    /hbnb - display "HBNB"
-    /c/<text> - display "C <text>"
-    /python/<text> - display "Python is cool"
-    /number/<n> - display n if integer
-    /number_template/<n> - display a HTML page if n is int
-    /number_odd_or_even/<n> - displays if a number is odd or even
-"""
+""" A script that starts a flask web application """
 from flask import Flask, render_template
-
 app = Flask(__name__)
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
 
 
 @app.route('/', strict_slashes=False)
-def hbnb_route():
-    """prints Hello HBNB"""
-    return "Hello HBNB!"
+def hello_hbnb():
+    """ Prints a Message when / is called """
+    return 'Hello HBNB!'
 
 
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    """prints HBNB"""
-    return "HBNB"
+    """ Prints a Message when /hbnb is called """
+    return 'HBNB'
 
 
-@app.route('/c/<string:text>', strict_slashes=False)
-def c_text(text):
-    """prints C followed by <text> content"""
-    text = text.replace("_", " ")
-    return "C %s" % text
+@app.route('/c/<text>', strict_slashes=False)
+def c_is_fun(text):
+    """ Prints a Message when /c is called """
+    return "C " + text.replace('_', ' ')
 
 
 @app.route('/python', strict_slashes=False)
-@app.route('/python/<string:text>', strict_slashes=False)
-def python_text(text="is cool"):
-    """prints Python is cool"""
-    text = text.replace("_", " ")
-    return "Python %s" % text
+@app.route('/python/<text>', strict_slashes=False)
+def python_is_cool(text='is_cool'):
+    """ Prints a Message when /python is called """
+    return "Python " + text.replace('_', ' ')
 
 
 @app.route('/number/<int:n>', strict_slashes=False)
-def number_n(n):
-    """displays n if integer"""
-    return "%i is a number" % n
+def n_is_number(n):
+    """ Prints a Message when /number is called only if n is an int"""
+    return "{:d} is a number".format(n)
 
 
 @app.route('/number_template/<int:n>', strict_slashes=False)
 def number_template(n):
-    """display a HTML page if n is int"""
+    """ display a HTML page only if n is an integer """
     return render_template('5-number.html', n=n)
 
 
 @app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
-def number_odd_or_even(n):
-    """display a HTML page if n is int"""
+def odd_or_even(n):
+    """ display a HTML page only if n is an integer """
     return render_template('6-number_odd_or_even.html', n=n)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    """ Main Function """
+    app.run(host='0.0.0.0', port=5000)
