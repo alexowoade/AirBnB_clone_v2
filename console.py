@@ -85,8 +85,7 @@ def type_checker(value):
             value = value[1:-1]
             value = value.replace('_', ' ')
             return value
-        else:
-            return False
+        return None
 
 
 class HBNBCommand(cmd.Cmd):
@@ -149,8 +148,8 @@ class HBNBCommand(cmd.Cmd):
             for attr in all_attributes:
                 attr = attr.split('=', 1)
                 key, value = attr[0], attr[1]
-                value = type_checker(value)
-                if value:
+                value = type_checker(str(value))
+                if value is not None:
                     obj.__dict__[key] = value
 
         obj.save()
