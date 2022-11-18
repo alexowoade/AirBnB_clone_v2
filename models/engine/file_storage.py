@@ -16,10 +16,12 @@ class FileStorage:
 
     def all(self, cls=None):
         ''' returns dictionary of all created objects '''
-        return FileStorage.__objects
-        # objs_dict = FileStorage.__objects
-        # return [obj for obj in objs_dict.values()
-        #         if obj.__class__.__name__ == cls]
+        if cls is None:
+            return FileStorage.__objects
+
+        objs_dict = FileStorage.__objects
+        return {obj for obj in objs_dict.values()
+                if obj.__class__.__name__ == cls}
 
     def new(self, obj):
         '''
