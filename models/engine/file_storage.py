@@ -18,6 +18,13 @@ class FileStorage:
         ''' returns dictionary of all created objects '''
         if cls is None:
             return FileStorage.__objects
+        cls_dict = {}
+        objs_dict = FileStorage.__objects
+        for key, obj in objs_dict:
+            if cls == obj.__class__.__name__:
+                cls_dict[key] = obj
+        return cls_dict
+
 
     def new(self, obj):
         '''
