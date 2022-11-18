@@ -17,7 +17,7 @@ class FileStorage:
     def all(self, cls=None):
         ''' returns dictionary of all created objects '''
         objs_dict = FileStorage.__objects.items()
-        return {key:obj for key, obj in objs_dict
+        return {f'key':obj for key, obj in objs_dict
         if obj.__class__.__name__ == cls}
 
     def new(self, obj):
