@@ -12,16 +12,18 @@ from models.review import Review
 from models import storage
 
 
-def parse(line):
+def parse(line, args):
     ''' parses the line (string) from prompt  before execution'''
     argv = line.split(' ')
+    if args == 'variadic':
+        return argv
+
     if len(argv) > 4:
         argv = argv[:4]
     if len(argv) != 4:
         return argv
 
     # parses update command (remove quotes)
-    print(argv)
     if argv[3][0] in ['"', '"']:
         argv[3] = argv[3][1:]
     if argv[3][-1] in ['"', '"']:
@@ -39,12 +41,12 @@ def err_manager(line, argc):
     if not line:
         print("** class name missing **")
         return -1
-    argv = parse(line)
+    argv = parse(line, argc)
     if argv[0] not in HBNBCommand.classes:
         print("** class doesn't exist **")
         return -1
 
-    if argc == 1:
+    if argc in [1, 'variadic']:
         return argv
 
     if len(argv) < 2:
@@ -79,7 +81,9 @@ def type_checker(value):
         float(value)
         return float(value)
     except ValueError:
-        return value
+        if value[0] == '"' and value[-1] == '"':
+            value = value[1:-1]
+            return value
 
 
 class HBNBCommand(cmd.Cmd):
@@ -118,17 +122,33 @@ class HBNBCommand(cmd.Cmd):
         '''
         pass
 
-    def do_create(self, cls):
+    def do_create(self, line):
         '''
         Usage: create
         - creates a new instance of class
         - saves it in the JSON file
         - prints the id
-        - Usage: create <class name>
+        - Usage: create <class name> or
+                 create <class name> <param 1> <param 2> ...
         '''
-        if err_manager(cls, 1) == -1:
+        if ' ' in line:
+            argv = err_manager(line, 'variadic')
+        else:
+            argv = err_manager(line, 1)
+        if argv == -1:
             return
-        obj = eval(cls)()
+
+        obj = eval(argv[0])()
+
+        if len(argv) != 1:
+            cls = argv[0]
+            all_attributes = argv[1:]
+            for attr in all_attributes:
+                attr = attr.split('=', 1)
+                key, value = attr[0], attr[1]
+                value = type_checker(value)
+                obj.__dict__[key] = value
+
         obj.save()
         print(obj.id)
 
