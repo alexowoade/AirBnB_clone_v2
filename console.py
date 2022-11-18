@@ -83,8 +83,7 @@ def type_checker(value):
     except ValueError:
         if value[0] == '"' and value[-1] == '"':
             value = value[1:-1]
-            if ' ' in value:
-                value.replace(' ', '_')
+            value = value.replace('_', ' ')
             return value
         else:
             return False
