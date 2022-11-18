@@ -84,6 +84,8 @@ def type_checker(value):
         if value[0] == '"' and value[-1] == '"':
             value = value[1:-1]
             return value
+        else:
+            return False
 
 
 class HBNBCommand(cmd.Cmd):
@@ -147,7 +149,8 @@ class HBNBCommand(cmd.Cmd):
                 attr = attr.split('=', 1)
                 key, value = attr[0], attr[1]
                 value = type_checker(value)
-                obj.__dict__[key] = value
+                if value:
+                    obj.__dict__[key] = value
 
         obj.save()
         print(obj.id)
