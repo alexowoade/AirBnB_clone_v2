@@ -17,8 +17,9 @@ class State(BaseModel, Base):
                           cascade='all, delete-orphan')
 
     # file storage
-    @property
-    def cities(self):
-        all_cities = models.storage.all(City)
-        return [city for city in all_cities.values()
-                if city.state_id == self.id]
+    if getenv('HBNB_TYPE_STORAGE', '') != 'db':
+        @property
+        def cities(self):
+            all_cities = models.storage.all(City)
+            return [city for city in all_cities.values()
+                    if city.state_id == self.id]

@@ -7,6 +7,6 @@ installFabric
 versions
 test.py
 tmp__init__.py
-tmp_console_main.py
+tmp*.py
 err
 out
