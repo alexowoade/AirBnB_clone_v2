@@ -18,6 +18,8 @@ class FileStorage:
         ''' returns dictionary of all created objects '''
         if cls is None:
             return self.__objects
+        if type(cls) is str:
+            cls = eval(cls)
 
         return {key: obj for key, obj in self.__objects.items()
                 if obj.__class__.__name__ == cls.__name__}
