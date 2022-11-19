@@ -8,3 +8,5 @@ versions
 test.py
 tmp__init__.py
 tmp_console_main.py
+err
+out

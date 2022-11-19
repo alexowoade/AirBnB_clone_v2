@@ -186,6 +186,7 @@ class HBNBCommand(cmd.Cmd):
         argv = err_manager(cls_name, 1)
         if argv == -1:
             return
+
         for obj in objects:
             print(obj) if obj.__class__.__name__ == cls_name else ""
 

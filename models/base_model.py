@@ -3,9 +3,18 @@
 from uuid import uuid4
 from datetime import datetime
 import models
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+
+
+Base = declarative_base()
 
 
 class BaseModel:
+    id = Column(String(60), unique=True, nullable=False, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
+    updated_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
+
     def __init__(self, *args, **kwargs):
         '''
             create new base model instance
@@ -14,13 +23,12 @@ class BaseModel:
         if kwargs == {}:
             self.id = str(uuid4())
             self.created_at = self.updated_at = datetime.now()
-            models.storage.new(self)
             return
 
         for key, value in kwargs.items():
             if key in ['created_at', 'updated_at']:
-                self.__dict__[key] = datetime.fromisoformat(value)
-            elif key != '__class__':
+                value = datetime.fromisoformat(value)
+            if key != '__class__':
                 self.__dict__[key] = value
 
     def __str__(self):
@@ -30,6 +38,7 @@ class BaseModel:
     def save(self):
         ''' updates the updated_at attribute when called '''
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
@@ -42,4 +51,10 @@ class BaseModel:
         my_dict['updated_at'] = self.updated_at.isoformat()
         # the __class__ key is needed to recreate the object
         my_dict['__class__'] = self.__class__.__name__
+        if '_sa_instance_state' in my_dict.keys():
+            del my_dict['_sa_instance_state']
         return my_dict
+
+    def delete(self):
+        ''' deletes the current instance from the storage '''
+        models.storage.delete(self)
