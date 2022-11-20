@@ -2,6 +2,7 @@
 import cmd
 import re
 import json
+from models import storage_type
 from models.base_model import BaseModel
 from models.user import User
 from models.place import Place
@@ -185,6 +186,13 @@ class HBNBCommand(cmd.Cmd):
             return
         argv = err_manager(cls_name, 1)
         if argv == -1:
+            return
+
+        if storage_type == 'db':
+            objects = list(objects)
+            print('[', end='')
+            for obj in objects:
+                print(obj, end=', ' if obj != objects[-1] else ']\n')
             return
 
         for obj in objects:
