@@ -14,10 +14,11 @@ class State(BaseModel, Base):
     if storage_type == 'db':
         name = Column(String(128), nullable=False)
         cities = relationship('City', backref='state',
-                          cascade='all, delete, delete-orphan')
+                              cascade='all, delete, delete-orphan')
     # file storage
     else:
         name = ''
+
         @property
         def cities(self):
             all_cities = models.storage.all(City)
