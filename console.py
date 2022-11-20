@@ -188,13 +188,6 @@ class HBNBCommand(cmd.Cmd):
         if argv == -1:
             return
 
-        if storage_type == 'db':
-            objects = list(objects)
-            print('[', end='')
-            for obj in objects:
-                print(obj, end=', ' if obj != objects[-1] else ']\n')
-            return
-
         for obj in objects:
             print(obj) if obj.__class__.__name__ == cls_name else ""
 
