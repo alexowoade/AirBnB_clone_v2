@@ -40,16 +40,12 @@ class DBStorage:
                     continue
                 for obj in obj_list:
                     key = type(obj).__name__ + '.' + obj.id
-                    if '_sa_instance_state' in obj.__dict__.keys():
-                        del obj.__dict__['_sa_instance_state']
                     obj_dict[key] = obj
             return obj_dict
 
         obj_list = self.__session.query(cls).all()
         for obj in obj_list:
             key = type(obj).__name__ + '.' + obj.id
-            if '_sa_instance_state' in obj.__dict__.keys():
-                del obj.__dict__['_sa_instance_state']
             obj_dict[key] = obj
         return obj_dict
 
