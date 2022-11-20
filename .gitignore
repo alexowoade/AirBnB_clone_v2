@@ -10,3 +10,4 @@ tmp__init__.py
 tmp*.py
 err
 out
+main.py
