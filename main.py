@@ -1,82 +1,49 @@
 #!/usr/bin/python3
-import inspect
-import io
-import sys
-import cmd
-import shutil
-import os
+from models import *
+from models.state import State
+from models.city import City
+from models.user import User
+from models.place import Place
+from models.amenity import Amenity
 
-"""
- Backup console file
-"""
-if os.path.exists("tmp_console_main.py"):
-    shutil.copy("tmp_console_main.py", "console.py")
-shutil.copy("console.py", "tmp_console_main.py")
+print('create state')
+s = State(name="California")
+s.save()
+print(s)
 
+print('-- create city')
+c = City(state_id=s.id, name="San Francisco")
+c.save()
+print(c)
 
-"""
- Updating console to remove "__main__"
-"""
-with open("tmp_console_main.py", "r") as file_i:
-    console_lines = file_i.readlines()
-    with open("console.py", "w") as file_o:
-        in_main = False
-        for line in console_lines:
-            if "__main__" in line:
-                in_main = True
-            elif in_main:
-                if "cmdloop" not in line:
-                    file_o.write(line.lstrip("    "))
-            else:
-                file_o.write(line)
+print('-- create user')
+u = User(email="a@a.com", password="pwd")
+u.save()
+print(u)
 
-import console
+print('-- create place 1')
+p1 = Place(user_id=u.id, city_id=c.id, name="House 1")
+p1.save()
+print(p1)
 
+print('-- create place 2')
+p2 = Place(user_id=u.id, city_id=c.id, name="House 2")
+p2.save()
+print(p2)
 
-"""
- Create console
-"""
-console_obj = "HBNBCommand"
-for name, obj in inspect.getmembers(console):
-    if inspect.isclass(obj) and issubclass(obj, cmd.Cmd):
-        console_obj = obj
+a1 = Amenity(name="Wifi")
+a1.save()
+a2 = Amenity(name="Cable")
+a2.save()
+a3 = Amenity(name="Eth")
+a3.save()
 
-my_console = console_obj(stdout=io.StringIO(), stdin=io.StringIO())
-my_console.use_rawinput = False
+p1.amenities.append(a1)
+p1.amenities.append(a2)
 
+p2.amenities.append(a1)
+p2.amenities.append(a2)
+p2.amenities.append(a3)
 
-"""
- Exec command
-"""
-def exec_command(my_console, the_command, last_lines = 1):
-    my_console.stdout = io.StringIO()
-    real_stdout = sys.stdout
-    sys.stdout = my_console.stdout
-    my_console.onecmd(the_command)
-    sys.stdout = real_stdout
-    lines = my_console.stdout.getvalue().split("\n")
-    return "\n".join(lines[(-1*(last_lines+1)):-1])
-
-
-"""
- Tests
-"""
-state_id = exec_command(my_console, "create State name=\"California\"")
-if state_id is None or state_id == "":
-    print("FAIL: Can't create State")
-
-city_id = exec_command(my_console, "create City state_id=\"{}\" name=\"Fremont\"".format(state_id))
-if city_id is None or city_id == "":
-    print("FAIL: Can't create City")
-
-user_id = exec_command(my_console, "create User email=\"a@a.com\" password=\"pwd\" first_name=\"fn\" last_name=\"ln\"")
-if user_id is None or user_id == "":
-    print("FAIL: Can't create User")
-
-place_id = exec_command(my_console, "create Place city_id=\"{}\" user_id=\"{}\" name=\"House\"".format(city_id, user_id))
-if place_id is None or place_id == "":
-    print("FAIL: Can't create Place")
-
-print("OK", end="")
-
-shutil.copy("tmp_console_main.py", "console.py")
+storage.save()
+print('last line')

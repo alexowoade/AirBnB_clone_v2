@@ -3,6 +3,7 @@ from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
 from models import storage_type
 from sqlalchemy.orm import relationship
 import models
+from uuid import uuid4
 
 
 if storage_type == 'db':
@@ -36,6 +37,12 @@ class Place(BaseModel, Base):
         amenities = relationship('Amenity', secondary=place_amenity,
                                  viewonly=False,
                                  back_populates='place_amenities')
+
+        def __init__(self, **kwargs):
+            self.id = str(uuid4())
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+
     else:
         city_id = user_id = name = description = ""
         number_rooms = number_bathrooms = max_guest = price_by_night = 0

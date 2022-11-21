@@ -3,6 +3,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from models import storage_type
+from uuid import uuid4
 
 
 class User(BaseModel, Base):
@@ -19,6 +20,11 @@ class User(BaseModel, Base):
 
         reviews = relationship('Review', backref='user',
                                cascade='all, delete, delete-orphan')
+
+        def __init__(self, **kwargs):
+            self.id = str(uuid4())
+            for key, value in kwargs.items():
+                setattr(self, key, value)
     else:
         email = ""
         password = ""
