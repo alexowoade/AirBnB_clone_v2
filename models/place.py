@@ -34,7 +34,8 @@ class Place(BaseModel, Base):
                                cascade='all, delete, delete-orphan')
 
         amenities = relationship('Amenity', secondary=place_amenity,
-                                 viewonly=False, back_populates='place_amenities')
+                                 viewonly=False,
+                                 back_populates='place_amenities')
     else:
         city_id = user_id = name = description = ""
         number_rooms = number_bathrooms = max_guest = price_by_night = 0
