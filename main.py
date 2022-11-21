@@ -1,49 +1,37 @@
 #!/usr/bin/python3
-from models import *
+"""
+ Test cities access from a state
+"""
+from models import storage
 from models.state import State
 from models.city import City
-from models.user import User
-from models.place import Place
-from models.amenity import Amenity
 
-print('create state')
-s = State(name="California")
-s.save()
-print(s)
+"""
+ Objects creations
+"""
+state_1 = State(name="California")
+print("New state: {}".format(state_1))
+state_1.save()
+state_2 = State(name="Arizona")
+print("New state: {}".format(state_2))
+state_2.save()
 
-print('-- create city')
-c = City(state_id=s.id, name="San Francisco")
-c.save()
-print(c)
+city_1_1 = City(state_id=state_1.id, name="Napa")
+print("New city: {} in the state: {}".format(city_1_1, state_1))
+city_1_1.save()
+city_1_2 = City(state_id=state_1.id, name="Sonoma")
+print("New city: {} in the state: {}".format(city_1_2, state_1))
+city_1_2.save()
+city_2_1 = City(state_id=state_2.id, name="Page")
+print("New city: {} in the state: {}".format(city_2_1, state_2))
+city_2_1.save()
 
-print('-- create user')
-u = User(email="a@a.com", password="pwd")
-u.save()
-print(u)
 
-print('-- create place 1')
-p1 = Place(user_id=u.id, city_id=c.id, name="House 1")
-p1.save()
-print(p1)
-
-print('-- create place 2')
-p2 = Place(user_id=u.id, city_id=c.id, name="House 2")
-p2.save()
-print(p2)
-
-a1 = Amenity(name="Wifi")
-a1.save()
-a2 = Amenity(name="Cable")
-a2.save()
-a3 = Amenity(name="Eth")
-a3.save()
-
-p1.amenities.append(a1)
-p1.amenities.append(a2)
-
-p2.amenities.append(a1)
-p2.amenities.append(a2)
-p2.amenities.append(a3)
-
-storage.save()
-print('last line')
+"""
+ Verification
+"""
+print("")
+all_states = storage.all(State)
+for state_id, state in all_states.items():
+    for city in state.cities:
+        print("Find the city {} in the state {}".format(city, state))

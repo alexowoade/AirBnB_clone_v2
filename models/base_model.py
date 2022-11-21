@@ -5,6 +5,7 @@ from datetime import datetime
 import models
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from models import storage_type
 
 
 Base = declarative_base()
@@ -21,9 +22,10 @@ class BaseModel:
             create new base model instance
             or recreate base model instance from dictionary
         '''
+        self.id = str(uuid4())
+        self.created_at = self.updated_at = datetime.now()
+
         if kwargs == {}:
-            self.id = str(uuid4())
-            self.created_at = self.updated_at = datetime.now()
             return
 
         for key, value in kwargs.items():

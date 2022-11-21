@@ -14,6 +14,7 @@ from sqlalchemy.orm.scoping import scoped_session
 
 
 class DBStorage:
+    ''' sets up the db storage engine '''
     __engine = None
     __session = None
     classes = [State, City, User, Amenity, Place, Review]
@@ -31,6 +32,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        ''' returns dictionary of objects '''
         obj_dict = {}
         if cls is None:
             for c in DBStorage.classes:
@@ -50,17 +52,25 @@ class DBStorage:
         return obj_dict
 
     def new(self, obj):
+        ''' adds a new record (object) to table '''
         self.__session.add(obj)
 
     def save(self):
+        ''' saves a new record (object) to table '''
         self.__session.commit()
 
     def delete(self, obj=None):
+        ''' deletes object (record) from table '''
         if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
+        ''' reload engine '''
         Base.metadata.create_all(self.__engine)
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session)
         self.__session = Session()
+
+    def close(self):
+        ''' close session '''
+        self.__session.close()
