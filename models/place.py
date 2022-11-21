@@ -1,8 +1,18 @@
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Integer, Float
+from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
 from models import storage_type
 from sqlalchemy.orm import relationship
 import models
+
+
+if storage_type == 'db':
+    place_amenity = Table('place_amenity', Base.metadata,
+                          Column('place_id', String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True, nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id'),
+                                 primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -23,6 +33,8 @@ class Place(BaseModel, Base):
         reviews = relationship('Review', backref='place',
                                cascade='all, delete, delete-orphan')
 
+        amenities = relationship('Amenity', secondary=place_amenity,
+                                 viewonly=False, back_populates='place_amenities')
     else:
         city_id = user_id = name = description = ""
         number_rooms = number_bathrooms = max_guest = price_by_night = 0
@@ -34,3 +46,14 @@ class Place(BaseModel, Base):
             reviews = models.storage.all('Review').values()
             return [review for review in reviews
                     if review.place_id == self.place_id]
+
+        @property
+        def amenities(self):
+            amenities = models.storage.all(Amenity).values()
+            return [amenity for amenity in amenities
+                    if amenity.id in self.amenity_ids]
+
+        @amenities.setter
+        def amenities(self, obj=None):
+            if type(obj) is Amenity and obj.id not in self.amenity_ids:
+                self.amenity_ids.append(obj.id)
