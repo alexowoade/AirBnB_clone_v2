@@ -18,8 +18,8 @@ if storage_type == 'db':
 
 class Place(BaseModel, Base):
     ''' defines Place class '''
+    __tablename__ = 'places'
     if storage_type == 'db':
-        __tablename__ = 'places'
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
         name = Column(String(128), nullable=False)
@@ -44,6 +44,7 @@ class Place(BaseModel, Base):
                 setattr(self, key, value)
 
     else:
+        print(storage_type)
         city_id = user_id = name = description = ""
         number_rooms = number_bathrooms = max_guest = price_by_night = 0
         latitude = longitude = 0.0

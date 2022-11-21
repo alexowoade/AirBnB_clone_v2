@@ -8,8 +8,8 @@ from uuid import uuid4
 
 class User(BaseModel, Base):
     ''' defines User class '''
+    __tablename__ = 'users'
     if storage_type == 'db':
-        __tablename__ = 'users'
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)

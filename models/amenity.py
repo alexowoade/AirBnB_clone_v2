@@ -9,8 +9,8 @@ from uuid import uuid4
 
 class Amenity(BaseModel, Base):
     ''' defines Amenity class '''
+    __tablename__ = 'amenities'
     if storage_type == 'db':
-        __tablename__ = 'amenities'
         name = Column(String(128), nullable=False)
         place_amenities = relationship('Place', secondary=place_amenity)
 
