@@ -22,10 +22,9 @@ class BaseModel:
             create new base model instance
             or recreate base model instance from dictionary
         '''
-        self.id = str(uuid4())
-        self.created_at = self.updated_at = datetime.now()
-
         if kwargs == {}:
+            self.id = str(uuid4())
+            self.created_at = self.updated_at = datetime.now()
             return
 
         for key, value in kwargs.items():
@@ -33,6 +32,12 @@ class BaseModel:
                 value = datetime.fromisoformat(value)
             if key != '__class__':
                 self.__dict__[key] = value
+        if 'id' not in kwargs:
+            self.id = str(uuid4())
+        if 'created_at' not in kwargs:
+            self.created_at = datetime.now()
+        if 'updated_at' not in kwargs:
+            self.updated_at = datetime.now()
 
     def __str__(self):
         ''' defines custom string representation of object '''
