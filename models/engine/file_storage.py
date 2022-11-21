@@ -24,7 +24,6 @@ class FileStorage:
         return {key: obj for key, obj in self.__objects.items()
                 if obj.__class__.__name__ == cls.__name__}
 
-
     def new(self, obj):
         '''
             creates dictionary of objects with
