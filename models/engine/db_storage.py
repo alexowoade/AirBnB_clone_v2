@@ -45,6 +45,8 @@ class DBStorage:
                     obj_dict[key] = obj
             return obj_dict
 
+        if type(cls) is str:
+            cls = eval(cls)
         obj_list = self.__session.query(cls).all()
         for obj in obj_list:
             key = type(obj).__name__ + '.' + obj.id
@@ -66,6 +68,7 @@ class DBStorage:
 
     def reload(self):
         ''' reload engine '''
+        print(self)
         Base.metadata.create_all(self.__engine)
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session)
