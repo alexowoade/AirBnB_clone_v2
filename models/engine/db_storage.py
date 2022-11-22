@@ -68,7 +68,10 @@ class DBStorage:
 
     def reload(self):
         ''' reload engine '''
-        Base.metadata.create_all(self.__engine)
+        try:
+            Base.metadata.create_all(self.__engine)
+        except Exception:
+            pass
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session)
         self.__session = Session()
