@@ -188,12 +188,13 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         '''
         Description:
-        Updates the instance attributes either through a key value pair
-        or a dictionary representation
+            Updates the instance attributes either through a key value pair
+            or a dictionary representation
+
         Usage:
-        - update <class name> <id> <attr name> <attr value>
-        - <class name>.update(<id>, <attribute name>, <attribute value>)
-        - <class name>.update(<id>, <dictionary representation>)
+            - update <class name> <id> <attr name> <attr value>
+            - <class name>.update(<id>, <attribute name>, <attribute value>)
+            - <class name>.update(<id>, <dictionary representation>)
         '''
         attributes = re.search(r"\{(.*?)\}", line)
         if not attributes:
