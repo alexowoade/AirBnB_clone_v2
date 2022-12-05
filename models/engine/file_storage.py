@@ -9,6 +9,16 @@ from models.amenity import Amenity
 from models.review import Review
 
 
+classes = {
+    'BaseModel': BaseModel,
+    'User': User,
+    'State': State,
+    'City': City,
+    'Amenity': Amenity,
+    'Place': Place,
+    'Review': Review
+}
+
 class FileStorage:
     ''' Defines the FileStorage Class '''
     __file_path = 'file.json'
@@ -16,10 +26,13 @@ class FileStorage:
 
     def all(self, cls=None):
         ''' returns dictionary of all created objects '''
-        if cls is None:
+        if not cls:
             return self.__objects
-        if type(cls) is str:
-            cls = eval(cls)
+
+        if cls not in classes.keys() and cls not in classes.values():
+            return None
+
+        cls = eval(cls) if type(cls) is str else cls
 
         return {key: obj for key, obj in self.__objects.items()
                 if obj.__class__.__name__ == cls.__name__}

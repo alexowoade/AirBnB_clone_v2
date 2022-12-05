@@ -178,17 +178,12 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, cls_name):
         ''' implements the create command '''
-        objects = storage.all().values()
-        if not cls_name:
-            # this is for, <all> without class name
-            [print(obj) for obj in objects]
-            return
-        argv = err_manager(cls_name, 1)
-        if argv == -1:
-            return
-
-        for obj in objects:
-            print(obj) if obj.__class__.__name__ == cls_name else ""
+        if cls_name:
+            argv = err_manager(cls_name, 1)
+            if argv == -1:
+                return
+        objects = storage.all(cls_name).values()
+        [print(obj) for obj in objects]
 
     def do_update(self, line):
         '''
@@ -230,11 +225,18 @@ class HBNBCommand(cmd.Cmd):
     def default(self, line):
         ''' implements the default commands  '''
         objects = storage.all().values()
-        argv = line.split('.', 1)
-        if len(argv) != 2:
+        argv = line.split('.')
+
+        if len(argv) != 2 or argv[0] not in HBNBCommand.classes:
+            print('*** unknown syntax:', line)
             return
+
         if argv[0] in HBNBCommand.classes and argv[1].endswith('()'):
             command = argv[1][:-2]
+
+            if command not in ['all', 'count']:
+                print('*** unknown syntax:', line)
+                return
 
             if command == 'all':
                 attrs = \

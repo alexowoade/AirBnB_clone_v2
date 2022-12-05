@@ -33,25 +33,27 @@ class DBStorage:
 
     def all(self, cls=None):
         ''' returns dictionary of objects '''
-        obj_dict = {}
-        if cls is None:
-            for c in DBStorage.classes:
-                try:
-                    obj_list = self.__session.query(c).all()
-                except Exception:
-                    continue
-                for obj in obj_list:
-                    key = type(obj).__name__ + '.' + obj.id
-                    obj_dict[key] = obj
-            return obj_dict
+        dict_of_objects = {}
 
-        if type(cls) is str:
-            cls = eval(cls)
+        if cls is None:
+            for _class in classes:
+                list_of_objs = self.__session.query(_class).all()
+
+                for obj in list_of_objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    dict_of_objects[key] = obj
+
+            return dict_of_objects
+
+        cls = eval(cls) if type(cls) is str else cls
+        if cls not in classes:
+            return None
+
         obj_list = self.__session.query(cls).all()
         for obj in obj_list:
             key = type(obj).__name__ + '.' + obj.id
-            obj_dict[key] = obj
-        return obj_dict
+            dict_of_objects[key] = obj
+        return dict_of_objects
 
     def new(self, obj):
         ''' adds a new record (object) to table '''
